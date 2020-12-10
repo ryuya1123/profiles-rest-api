@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
-class UserProfileManager():
+class UserProfileManager(BaseUserManager):
     """Manager for user profiles"""
 
     def create_user(self, email, name, password=None):
@@ -22,6 +22,7 @@ class UserProfileManager():
     def create_superuser(self, email, name, password):
         """Create and save a new superuser with given detabase"""
         user = self.create_user(email, name, password)
+        
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
@@ -38,7 +39,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELD = ['name']
+    REQUIRED_FIELDS = ['name']
 
     def get_full_name(self):
         """Retrieve full neme of user"""
